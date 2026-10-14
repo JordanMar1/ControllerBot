@@ -44,7 +44,7 @@ def use_touch(touch="z"):
 
 class MyBot(commands.Bot):
     async def setup_hook(self):
-        await self.tree.sync()  # enregistre /screamer auprès de Discord
+        await self.tree.sync()
 
 
 bot = MyBot(command_prefix="!", intents=discord.Intents.default())
@@ -82,11 +82,12 @@ async def scream(interaction: discord.Interaction,
                 os.remove(p)
 
 @bot.tree.command(name="command", description="fais moi utiliser la touche que tu veux")
+@app_commands.describe(touch="La touche à appuyer")
 async def command(interaction: discord.Interaction, touch: str):
     try:
         use_touch(touch)
-        await interaction.followup.send("touche lancée !")
+        await interaction.response.send_message("touche lancée !", ephemeral=True)
     except Exception as e:
-        await interaction.followup.send(f"Erreur : {e}")
+        await interaction.response.send_message(f"Erreur : {e}", ephemeral=True)
 
 bot.run(os.getenv("KEY"))
